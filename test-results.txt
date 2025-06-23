@@ -1,0 +1,593 @@
+
+> currency-converter-app@0.1.0 test
+> jest
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.error
+    Currency conversion API error: Error: API rate limit exceeded
+        at Object.<anonymous> (/Users/shah/AirAsia/currency-converter-app/__tests__/api/convert.test.ts:130:43)
+        at Promise.then.completed (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/utils.js:298:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/utils.js:231:10)
+        at _callCircusTest (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/run.js:316:40)
+        at processTicksAndRejections (node:internal/process/task_queues:105:5)
+        at _runTest (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/run.js:252:3)
+        at _runTestsForDescribeBlock (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/run.js:126:9)
+        at _runTestsForDescribeBlock (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/run.js:121:9)
+        at run (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/run.js:71:3)
+        at runAndTransformResultsToJestFormat (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+        at jestAdapter (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+        at runTestInternal (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-runner/build/runTest.js:367:16)
+        at runTest (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-runner/build/runTest.js:444:34)
+        at Object.worker (/Users/shah/AirAsia/currency-converter-app/node_modules/jest-runner/build/testWorker.js:106:12)
+
+       96 |             return;
+       97 |         }
+    >  98 |         originalError.call(console, ...args);
+          |                       ^
+       99 |     };
+      100 | });
+      101 |
+
+      at console.call [as error] (jest.setup.js:98:23)
+      at error (src/app/api/convert/route.ts:93:13)
+      at Object.<anonymous> (__tests__/api/convert.test.ts:136:22)
+
+PASS __tests__/api/convert.test.ts
+  /api/convert
+    ✓ should convert currency successfully (7 ms)
+    ✓ should return 400 for missing parameters (2 ms)
+    ✓ should return 400 for invalid amount
+    ✓ should return 400 for negative amount
+    ✓ should handle same currencies correctly (1 ms)
+    ✓ should handle service errors gracefully (7 ms)
+    ✓ should handle invalid currency codes (1 ms)
+    ✓ should handle large amounts correctly
+    ✓ should handle decimal amounts correctly (1 ms)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    Fetching fresh exchange rates from API with retry logic
+
+      at log (src/services/currencyService.ts:54:13)
+
+  console.log
+    Successfully fetched rates after 1 attempts
+
+      at log (src/services/currencyService.ts:86:13)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+PASS __tests__/integration/api.integration.test.ts
+  API Integration Tests
+    Currency Conversion Logic
+      ✓ should handle same currency conversion (2 ms)
+      ✓ should calculate conversion correctly (1 ms)
+      ✓ should handle decimal amounts
+      ✓ should validate amount limits
+    Currency Code Validation
+      ✓ should validate supported currency codes (2 ms)
+      ✓ should reject invalid currency codes (1 ms)
+    API Response Format Validation
+      ✓ should validate convert API response structure (1 ms)
+      ✓ should validate rates API response structure
+    Error Response Validation
+      ✓ should validate error response structure (1 ms)
+      ✓ should handle different error types (1 ms)
+    Data Processing Logic
+      ✓ should format amounts correctly (29 ms)
+      ✓ should calculate cross-currency rates correctly
+      ✓ should handle timestamp validation (1 ms)
+    Performance Metrics
+      ✓ should handle multiple conversion calculations efficiently
+      ✓ should validate rate calculation precision
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    🗑️ Dropped table: users
+
+      at InMemoryDB.log [as dropTable] (src/lib/memoryDB.ts:199:13)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.error
+    Error in currency conversion: Error: Currency 'XYZ' is not supported or available
+        at convertCurrency (/Users/shah/AirAsia/currency-converter-app/src/services/currencyService.ts:126:13)
+        at processTicksAndRejections (node:internal/process/task_queues:105:5)
+        at Object.<anonymous> (/Users/shah/AirAsia/currency-converter-app/__tests__/services/currencyService.test.ts:156:7)
+
+       96 |             return;
+       97 |         }
+    >  98 |         originalError.call(console, ...args);
+          |                       ^
+       99 |     };
+      100 | });
+      101 |
+
+      at console.call [as error] (jest.setup.js:98:23)
+      at error (src/services/currencyService.ts:175:13)
+      at Object.<anonymous> (__tests__/services/currencyService.test.ts:156:7)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    Using in-memory database exchange rates
+
+      at log (src/services/currencyService.ts:31:15)
+
+  console.log
+    ✅ Created table: users
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: temp_data
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+FAIL __tests__/services/currencyService.test.ts
+  Currency Service
+    convertCurrency
+      ✓ should convert currency successfully (4 ms)
+      ✓ should use cached data when available (2 ms)
+      ✓ should handle reverse conversion (non-USD base) (1 ms)
+      ✓ should convert from non-USD to USD (1 ms)
+      ✕ should handle API errors gracefully (1 ms)
+      ✓ should throw error for unsupported currencies (3 ms)
+      ✓ should handle zero amount (1 ms)
+      ✓ should handle decimal amounts correctly
+    getRates
+      ✕ should return rates successfully (3 ms)
+      ✓ should use cached rates when available (1 ms)
+      ✕ should handle API errors (1 ms)
+
+  ● Currency Service › convertCurrency › should handle API errors gracefully
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"baseCurrency": "USD", "convertedAmount": 86.77, "fromCurrency": "USD", "originalAmount": 100, "rateUsed": 0.8677, "timestamp": 1750713740983, "toCurrency": "EUR"}
+
+      138 |
+      139 |       // Act & Assert
+    > 140 |       await expect(convertCurrency('USD', 'EUR', 100)).rejects.toThrow('API error');
+          |             ^
+      141 |     });
+      142 |
+      143 |     it('should throw error for unsupported currencies', async () => {
+
+      at expect (node_modules/expect/build/index.js:113:15)
+      at Object.expect (__tests__/services/currencyService.test.ts:140:13)
+
+  ● Currency Service › getRates › should return rates successfully
+
+    expect(jest.fn()).toHaveBeenCalled()
+
+    Expected number of calls: >= 1
+    Received number of calls:    0
+
+      210 |       expect(result.baseCurrency).toBe('USD');
+      211 |       expect(result.timestamp).toBeDefined();
+    > 212 |       expect(mockSetToCache).toHaveBeenCalled();
+          |                              ^
+      213 |     });
+      214 |
+      215 |     it('should use cached rates when available', async () => {
+
+      at Object.toHaveBeenCalled (__tests__/services/currencyService.test.ts:212:30)
+
+  ● Currency Service › getRates › should handle API errors
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"baseCurrency": "USD", "rates": {"EUR": 0.8677, "GBP": 0.7534, "JPY": 110.234, "SGD": 1.286}, "timestamp": 1750713740983}
+
+      241 |
+      242 |       // Act & Assert
+    > 243 |       await expect(getRates()).rejects.toThrow('Network error');
+          |             ^
+      244 |     });
+      245 |   });
+      246 | }); 
+
+      at expect (node_modules/expect/build/index.js:113:15)
+      at Object.expect (__tests__/services/currencyService.test.ts:243:13)
+
+PASS __tests__/integration/e2e.integration.test.ts
+  End-to-End Integration Tests
+    API Integration Tests
+      ✓ should handle successful API responses (2 ms)
+      ✓ should handle API errors (1 ms)
+      ✓ should handle network errors (5 ms)
+      ✓ should handle rates API successfully
+      ✓ should validate API response structure (1 ms)
+    Performance Tests
+      ✓ should handle multiple rapid API calls (1 ms)
+      ✓ should handle concurrent API requests
+    Error Handling Tests
+      ✓ should handle malformed API responses (1 ms)
+      ✓ should handle timeout scenarios (103 ms)
+    Data Validation Tests
+      ✓ should validate currency codes
+      ✓ should validate amount formats (1 ms)
+      ✓ should validate exchange rates
+
+  console.log
+    ✅ Created table: temp_data
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: stats_test
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: exchange_rates
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: conversion_history
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: currency_metadata
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+  console.log
+    ✅ Created table: api_usage
+
+      at InMemoryDB.log [as createTable] (src/lib/memoryDB.ts:39:13)
+
+PASS __tests__/lib/memoryDB.test.ts (13.304 s)
+  InMemoryDB
+    Table Management
+      ✓ should create table with schema (4 ms)
+      ✓ should throw error when creating duplicate table (8 ms)
+      ✓ should drop table successfully (1 ms)
+    Data Operations
+      ✓ should insert data successfully (1 ms)
+      ✓ should validate data against schema (1 ms)
+      ✓ should find records by ID (1 ms)
+      ✓ should find records with where clause (1 ms)
+      ✓ should apply ordering (1 ms)
+      ✓ should apply pagination (1 ms)
+      ✓ should update records
+      ✓ should delete records (3 ms)
+      ✓ should count records (1 ms)
+    TTL and Expiration
+      ✓ should handle TTL expiration (4003 ms)
+      ✓ should cleanup expired records (4003 ms)
+    Statistics
+      ✓ should provide table statistics (2 ms)
+  CurrencyDB
+    Exchange Rates Operations
+      ✓ should save and retrieve exchange rates (3 ms)
+      ✓ should return null for non-existent rates (2 ms)
+    Conversion History Operations
+      ✓ should log and retrieve conversion history (3 ms)
+      ✓ should limit conversion history results (2 ms)
+    API Usage Tracking
+      ✓ should log and retrieve API usage stats (3 ms)
+      ✓ should filter API stats by time period (1004 ms)
+    Database Maintenance
+      ✓ should cleanup expired records (4006 ms)
+      ✓ should provide database statistics (5 ms)
+    Currency Metadata Operations
+      ✓ should save and retrieve currency metadata (5 ms)
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       3 failed, 68 passed, 71 total
+Snapshots:   0 total
+Time:        13.892 s, estimated 14 s
+Ran all test suites.
