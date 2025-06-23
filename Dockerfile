@@ -22,7 +22,7 @@ COPY . .
 RUN npm ci
 
 # Build the application
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # Stage 3: Runner
@@ -33,6 +33,11 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Set environment variables
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME="0.0.0.0"
+
 # Copy necessary files
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
@@ -41,11 +46,34 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Set environment variables
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+# Create healthcheck script
+RUN echo '#!/usr/bin/env node\n\
+const http = require("http");\n\
+const port = process.env.PORT || 3000;\n\
+const options = {\n\
+  host: "localhost",\n\
+  port: port,\n\
+  path: "/api/rates",\n\
+  timeout: 2000,\n\
+};\n\
+const request = http.request(options, (res) => {\n\
+  console.log(`STATUS: ${res.statusCode}`);\n\
+  if (res.statusCode === 200) {\n\
+    process.exit(0);\n\
+  } else {\n\
+    process.exit(1);\n\
+  }\n\
+});\n\
+request.on("error", function(err) {\n\
+  console.log("ERROR");\n\
+  process.exit(1);\n\
+});\n\
+request.on("timeout", function() {\n\
+  console.log("TIMEOUT");\n\
+  request.destroy();\n\
+  process.exit(1);\n\
+});\n\
+request.end();' > healthcheck.js && chmod +x healthcheck.js
 
 # Expose port
 EXPOSE 3000
