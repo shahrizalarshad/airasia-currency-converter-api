@@ -21,6 +21,11 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Currency Converter",
   description: "Real-time currency converter with live exchange rates",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/favicon.ico",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

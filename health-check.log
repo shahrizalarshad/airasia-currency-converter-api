@@ -1,0 +1,12 @@
+[2025-06-24 03:26:44] INFO: Starting health check for currency-converter-local...
+[2025-06-24 03:26:44] SUCCESS: Container currency-converter-local is running
+[2025-06-24 03:26:44] SUCCESS: HTTP health check passed (HTTP 200)
+[2025-06-24 03:26:44] ERROR: API functionality check failed
+[2025-06-24 03:26:47] INFO: Resource usage - Memory: 49.36MiB / 7.654GiB, CPU: 0.00%
+[2025-06-24 03:26:47] ERROR: Some health checks failed ❌
+[2025-06-24 03:27:14] INFO: Starting health check for currency-converter-local...
+[2025-06-24 03:27:14] SUCCESS: Container currency-converter-local is running
+[2025-06-24 03:27:14] SUCCESS: HTTP health check passed (HTTP 200)
+[2025-06-24 03:27:14] SUCCESS: API functionality check passed
+[2025-06-24 03:27:17] INFO: Resource usage - Memory: 49.89MiB / 7.654GiB, CPU: 0.00%
+[2025-06-24 03:27:17] SUCCESS: All health checks passed ✅

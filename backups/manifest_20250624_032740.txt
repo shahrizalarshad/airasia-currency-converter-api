@@ -1,0 +1,23 @@
+Currency Converter Backup Manifest
+==================================
+Backup Date: Tue Jun 24 03:27:46 +08 2025
+Backup Directory: ./backups
+Application Directory: .
+
+Files in this backup:
+-rw-r--r--@ 1 shah  staff     98907 Jun 24 03:27 ./backups/config_20250624_032740.tar.gz
+-rw-r--r--@ 1 shah  staff  75297837 Jun 24 03:27 ./backups/image_20250624_032740.tar.gz
+-rw-r--r--@ 1 shah  staff       451 Jun 24 03:27 ./backups/logs_20250624_032740.tar.gz
+-rw-r--r--@ 1 shah  staff       188 Jun 24 03:27 ./backups/manifest_20250624_032740.txt
+
+System Information:
+==================
+Hostname: shah
+OS: Darwin shah 24.5.0 Darwin Kernel Version 24.5.0: Tue Apr 22 19:54:29 PDT 2025; root:xnu-11417.121.6~2/RELEASE_ARM64_T6030 arm64
+Docker Version: Docker version 28.2.2, build e6534b4
+Docker Compose Version: Not installed
+
+Container Status:
+================
+CONTAINER ID   IMAGE                       COMMAND                  CREATED         STATUS                   PORTS                                         NAMES
+c73885f2f348   currency-converter:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes (healthy)   0.0.0.0:3002->3000/tcp, [::]:3002->3000/tcp   currency-converter-local
