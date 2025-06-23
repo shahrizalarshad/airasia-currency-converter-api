@@ -24,7 +24,7 @@ interface QueryOptions {
 class InMemoryDB {
   private tables: Map<string, Map<string, DBRecord>> = new Map();
   private schemas: Map<string, TableSchema> = new Map();
-  private indexes: Map<string, Map<string, Set<string>>> = new Map();
+  private indexes: Map<string, Map<string, Map<string, Set<string>>>> = new Map();
 
   // Create a table with schema
   createTable(tableName: string, schema: TableSchema): void {
@@ -34,7 +34,7 @@ class InMemoryDB {
     
     this.tables.set(tableName, new Map());
     this.schemas.set(tableName, schema);
-    this.indexes.set(tableName, new Map());
+    this.indexes.set(tableName, new Map<string, Map<string, Set<string>>>());
     
     console.log(`✅ Created table: ${tableName}`);
   }
@@ -249,11 +249,11 @@ class InMemoryDB {
     for (const [field, value] of Object.entries(data)) {
       if (typeof value === 'string' || typeof value === 'number') {
         if (!tableIndexes.has(field)) {
-          tableIndexes.set(field, new Map());
+          tableIndexes.set(field, new Map<string, Set<string>>());
         }
         const fieldIndex = tableIndexes.get(field)!;
         if (!fieldIndex.has(String(value))) {
-          fieldIndex.set(String(value), new Set());
+          fieldIndex.set(String(value), new Set<string>());
         }
         fieldIndex.get(String(value))!.add(id);
       }
