@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Deliverables and build artifacts
+AirAsia-Currency-Converter-API-Deliverables.zip
+airasia-currency-converter-deliverables/
+test-results.txt
