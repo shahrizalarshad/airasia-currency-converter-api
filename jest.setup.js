@@ -45,11 +45,13 @@ if (typeof window !== 'undefined') {
         })),
     });
 
-    // Mock navigator.vibrate for haptic feedback tests
-    Object.defineProperty(navigator, 'vibrate', {
-        writable: true,
-        value: jest.fn(),
-    });
+    // Mock navigator.vibrate for haptic feedback tests (only in jsdom)
+    if (typeof navigator !== 'undefined') {
+        Object.defineProperty(navigator, 'vibrate', {
+            writable: true,
+            value: jest.fn(),
+        });
+    }
 }
 
 // Mock fetch for API tests

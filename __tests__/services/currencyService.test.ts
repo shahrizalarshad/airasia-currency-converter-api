@@ -49,7 +49,7 @@ describe('Currency Service', () => {
         success: true,
         data: mockRatesData.rates,
         attempts: 1,
-        error: null
+        error: undefined
       });
 
       // Act
@@ -90,7 +90,7 @@ describe('Currency Service', () => {
         success: true,
         data: mockRatesData.rates,
         attempts: 1,
-        error: null
+        error: undefined
       });
 
       // Act
@@ -112,7 +112,7 @@ describe('Currency Service', () => {
         success: true,
         data: mockRatesData.rates,
         attempts: 1,
-        error: null
+        error: undefined
       });
 
       // Act
@@ -168,7 +168,7 @@ describe('Currency Service', () => {
         success: true,
         data: mockRatesData.rates,
         attempts: 1,
-        error: null
+        error: undefined
       });
 
       // Act
@@ -199,7 +199,7 @@ describe('Currency Service', () => {
         success: true,
         data: mockRatesData.rates,
         attempts: 1,
-        error: null
+        error: undefined
       });
 
       // Act
