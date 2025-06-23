@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { convertCurrency, isValidCurrencyCode } from '@/services/currencyService';
+import currencyDB from '@/lib/memoryDB';
 
 export async function GET(request: NextRequest) {
   try {
@@ -65,7 +66,23 @@ export async function GET(request: NextRequest) {
     }
 
     // Perform currency conversion
+    const startTime = Date.now();
     const result = await convertCurrency(from, to, amount);
+    const responseTime = Date.now() - startTime;
+
+    // Log conversion to database
+    const userAgent = request.headers.get('user-agent') || 'unknown';
+    currencyDB.logConversion(
+      result.fromCurrency,
+      result.toCurrency,
+      result.originalAmount,
+      result.convertedAmount,
+      result.rateUsed,
+      userAgent
+    );
+
+    // Log API usage
+    currencyDB.logAPIUsage('/api/convert', 'GET', responseTime, 200, userAgent);
 
     return NextResponse.json({
       success: true,

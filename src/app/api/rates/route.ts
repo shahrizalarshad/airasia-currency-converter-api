@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRates, getSupportedCurrencies } from '@/services/currencyService';
+import currencyDB from '@/lib/memoryDB';
 
 export async function GET(request: NextRequest) {
   try {
+    const startTime = Date.now();
     const { searchParams } = new URL(request.url);
     const includeList = searchParams.get('currencies');
     const includeCurrencies = searchParams.get('include_currencies') === 'true';
 
     // Get latest exchange rates
     const ratesData = await getRates();
+    const responseTime = Date.now() - startTime;
 
     let response: any = {
       success: true,
@@ -45,6 +48,10 @@ export async function GET(request: NextRequest) {
       response.data.supportedCurrencies = supportedCurrencies;
       response.data.totalCurrencies = supportedCurrencies.length;
     }
+
+    // Log API usage
+    const userAgent = request.headers.get('user-agent') || 'unknown';
+    currencyDB.logAPIUsage('/api/rates', 'GET', responseTime, 200, userAgent);
 
     return NextResponse.json(response, { status: 200 });
 

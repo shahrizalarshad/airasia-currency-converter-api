@@ -1,6 +1,7 @@
 import { fetchLatestRates } from './openExchangeRatesService';
 import { getFromCache, setToCache } from '../lib/cache';
 import { retryWithBackoff, isOnline, waitForOnline } from '../lib/retry';
+import currencyDB from '../lib/memoryDB';
 
 const CACHE_KEY_LATEST_RATES = 'latest_rates';
 const CACHE_TTL_HOURS = 1; // Cache rates for 1 hour
@@ -23,11 +24,23 @@ export interface RatesResponse {
 
 export async function getRates(): Promise<RatesResponse> {
   try {
-    // Try to get rates from cache first
+    // Try to get rates from in-memory database first
+    const dbRates = currencyDB.getLatestExchangeRates('USD');
+    
+    if (dbRates) {
+      console.log('Using in-memory database exchange rates');
+      return {
+        rates: dbRates.rates,
+        timestamp: dbRates.timestamp,
+        baseCurrency: dbRates.baseCurrency
+      };
+    }
+
+    // Fallback to simple cache
     const cachedRates = getFromCache<RatesResponse>(CACHE_KEY_LATEST_RATES);
     
     if (cachedRates) {
-      console.log('Using cached exchange rates');
+      console.log('Using fallback cached exchange rates');
       return cachedRates;
     }
 
@@ -64,7 +77,10 @@ export async function getRates(): Promise<RatesResponse> {
       baseCurrency: 'USD' // OER free plan uses USD as base
     };
 
-    // Cache the rates
+    // Save to in-memory database
+    currencyDB.saveExchangeRates('USD', result.data!, 'openexchangerates');
+    
+    // Also cache the rates as fallback
     setToCache(CACHE_KEY_LATEST_RATES, ratesResponse, CACHE_TTL_HOURS);
     
     console.log(`Successfully fetched rates after ${result.attempts} attempts`);
