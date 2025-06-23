@@ -11,15 +11,15 @@ class InMemoryCache {
     this.defaultTTL = defaultTTLHours * 60 * 60 * 1000; // Convert hours to milliseconds
   }
 
-  getFromCache<T>(key: string): T | null {
+  getFromCache<T>(key: string, checkExpiry: boolean = true): T | null {
     const item = this.cache.get(key);
     
     if (!item) {
       return null;
     }
 
-    // Check if item has expired
-    if (Date.now() > item.expiresAt) {
+    // Check if item has expired (unless explicitly told not to)
+    if (checkExpiry && Date.now() > item.expiresAt) {
       this.cache.delete(key);
       return null;
     }
@@ -60,7 +60,8 @@ class InMemoryCache {
 // Create and export a singleton instance
 const cache = new InMemoryCache();
 
-export const getFromCache = <T>(key: string): T | null => cache.getFromCache<T>(key);
+export const getFromCache = <T>(key: string, checkExpiry: boolean = true): T | null => 
+  cache.getFromCache<T>(key, checkExpiry);
 export const setToCache = <T>(key: string, data: T, customTTLHours?: number): void => 
   cache.setToCache<T>(key, data, customTTLHours);
 export const clearCache = (): void => cache.clearCache();

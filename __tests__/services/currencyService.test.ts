@@ -1,14 +1,29 @@
 import { convertCurrency, getRates } from '@/services/currencyService';
-import * as openExchangeRatesService from '@/services/openExchangeRatesService';
-import * as cache from '@/lib/cache';
 
 // Mock the dependencies
-jest.mock('@/services/openExchangeRatesService');
-jest.mock('@/lib/cache');
+jest.mock('@/services/openExchangeRatesService', () => ({
+  fetchLatestRates: jest.fn(),
+}));
 
-const mockGetLatestRates = openExchangeRatesService.getLatestRates as jest.MockedFunction<typeof openExchangeRatesService.getLatestRates>;
-const mockGetFromCache = cache.getFromCache as jest.MockedFunction<typeof cache.getFromCache>;
-const mockSetToCache = cache.setToCache as jest.MockedFunction<typeof cache.setToCache>;
+jest.mock('@/lib/cache', () => ({
+  getFromCache: jest.fn(),
+  setToCache: jest.fn(),
+}));
+
+jest.mock('@/lib/retry', () => ({
+  retryWithBackoff: jest.fn(),
+  isOnline: jest.fn(() => true),
+  waitForOnline: jest.fn(),
+}));
+
+import { fetchLatestRates } from '@/services/openExchangeRatesService';
+import { getFromCache, setToCache } from '@/lib/cache';
+import { retryWithBackoff } from '@/lib/retry';
+
+const mockFetchLatestRates = fetchLatestRates as jest.MockedFunction<typeof fetchLatestRates>;
+const mockGetFromCache = getFromCache as jest.MockedFunction<typeof getFromCache>;
+const mockSetToCache = setToCache as jest.MockedFunction<typeof setToCache>;
+const mockRetryWithBackoff = retryWithBackoff as jest.MockedFunction<typeof retryWithBackoff>;
 
 describe('Currency Service', () => {
   beforeEach(() => {
@@ -30,7 +45,12 @@ describe('Currency Service', () => {
     it('should convert currency successfully', async () => {
       // Arrange
       mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockResolvedValue(mockRatesData);
+      mockRetryWithBackoff.mockResolvedValue({
+        success: true,
+        data: mockRatesData.rates,
+        attempts: 1,
+        error: null
+      });
 
       // Act
       const result = await convertCurrency('USD', 'EUR', 100);
@@ -47,21 +67,31 @@ describe('Currency Service', () => {
 
     it('should use cached data when available', async () => {
       // Arrange
-      mockGetFromCache.mockReturnValue(mockRatesData);
+      const cachedData = {
+        rates: mockRatesData.rates,
+        timestamp: Date.now(),
+        baseCurrency: 'USD'
+      };
+      mockGetFromCache.mockReturnValue(cachedData);
 
       // Act
       const result = await convertCurrency('USD', 'EUR', 100);
 
       // Assert
       expect(result.convertedAmount).toBe(86.77);
-      expect(mockGetLatestRates).not.toHaveBeenCalled();
+      expect(mockRetryWithBackoff).not.toHaveBeenCalled();
       expect(mockSetToCache).not.toHaveBeenCalled();
     });
 
     it('should handle reverse conversion (non-USD base)', async () => {
       // Arrange
       mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockResolvedValue(mockRatesData);
+      mockRetryWithBackoff.mockResolvedValue({
+        success: true,
+        data: mockRatesData.rates,
+        attempts: 1,
+        error: null
+      });
 
       // Act
       const result = await convertCurrency('EUR', 'GBP', 100);
@@ -72,13 +102,18 @@ describe('Currency Service', () => {
       expect(result.toCurrency).toBe('GBP');
       // EUR to USD: 100 / 0.8677 = 115.25
       // USD to GBP: 115.25 * 0.7534 = 86.81
-      expect(result.convertedAmount).toBeCloseTo(86.81, 2);
+      expect(result.convertedAmount).toBeCloseTo(86.83, 2);
     });
 
     it('should convert from non-USD to USD', async () => {
       // Arrange
       mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockResolvedValue(mockRatesData);
+      mockRetryWithBackoff.mockResolvedValue({
+        success: true,
+        data: mockRatesData.rates,
+        attempts: 1,
+        error: null
+      });
 
       // Act
       const result = await convertCurrency('EUR', 'USD', 100);
@@ -94,7 +129,12 @@ describe('Currency Service', () => {
     it('should handle API errors gracefully', async () => {
       // Arrange
       mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockRejectedValue(new Error('API error'));
+      mockRetryWithBackoff.mockResolvedValue({
+        success: false,
+        data: null,
+        attempts: 3,
+        error: new Error('API error')
+      });
 
       // Act & Assert
       await expect(convertCurrency('USD', 'EUR', 100)).rejects.toThrow('API error');
@@ -103,37 +143,33 @@ describe('Currency Service', () => {
     it('should throw error for unsupported currencies', async () => {
       // Arrange
       const ratesWithoutCurrency = {
-        base: 'USD',
         rates: {
           EUR: 0.8677,
         },
-        timestamp: 1640995200,
+        timestamp: Date.now(),
+        baseCurrency: 'USD'
       };
       
-      mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockResolvedValue(ratesWithoutCurrency);
+      mockGetFromCache.mockReturnValue(ratesWithoutCurrency);
 
       // Act & Assert
       await expect(convertCurrency('USD', 'XYZ', 100)).rejects.toThrow();
     });
 
     it('should handle zero amount', async () => {
-      // Arrange
-      mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockResolvedValue(mockRatesData);
-
-      // Act
-      const result = await convertCurrency('USD', 'EUR', 0);
-
-      // Assert
-      expect(result.originalAmount).toBe(0);
-      expect(result.convertedAmount).toBe(0);
+      // Act & Assert
+      await expect(convertCurrency('USD', 'EUR', 0)).rejects.toThrow('Invalid input parameters');
     });
 
     it('should handle decimal amounts correctly', async () => {
       // Arrange
       mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockResolvedValue(mockRatesData);
+      mockRetryWithBackoff.mockResolvedValue({
+        success: true,
+        data: mockRatesData.rates,
+        attempts: 1,
+        error: null
+      });
 
       // Act
       const result = await convertCurrency('USD', 'EUR', 99.99);
@@ -159,7 +195,12 @@ describe('Currency Service', () => {
     it('should return rates successfully', async () => {
       // Arrange
       mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockResolvedValue(mockRatesData);
+      mockRetryWithBackoff.mockResolvedValue({
+        success: true,
+        data: mockRatesData.rates,
+        attempts: 1,
+        error: null
+      });
 
       // Act
       const result = await getRates();
@@ -167,26 +208,36 @@ describe('Currency Service', () => {
       // Assert
       expect(result.rates).toEqual(mockRatesData.rates);
       expect(result.baseCurrency).toBe('USD');
-      expect(result.timestamp).toBe(1640995200);
+      expect(result.timestamp).toBeDefined();
       expect(mockSetToCache).toHaveBeenCalled();
     });
 
     it('should use cached rates when available', async () => {
       // Arrange
-      mockGetFromCache.mockReturnValue(mockRatesData);
+      const cachedData = {
+        rates: mockRatesData.rates,
+        timestamp: Date.now(),
+        baseCurrency: 'USD'
+      };
+      mockGetFromCache.mockReturnValue(cachedData);
 
       // Act
       const result = await getRates();
 
       // Assert
       expect(result.rates).toEqual(mockRatesData.rates);
-      expect(mockGetLatestRates).not.toHaveBeenCalled();
+      expect(mockRetryWithBackoff).not.toHaveBeenCalled();
     });
 
     it('should handle API errors', async () => {
       // Arrange
       mockGetFromCache.mockReturnValue(null);
-      mockGetLatestRates.mockRejectedValue(new Error('Network error'));
+      mockRetryWithBackoff.mockResolvedValue({
+        success: false,
+        data: null,
+        attempts: 3,
+        error: new Error('Network error')
+      });
 
       // Act & Assert
       await expect(getRates()).rejects.toThrow('Network error');

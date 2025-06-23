@@ -1,5 +1,6 @@
 import { fetchLatestRates } from './openExchangeRatesService';
 import { getFromCache, setToCache } from '../lib/cache';
+import { retryWithBackoff, isOnline, waitForOnline } from '../lib/retry';
 
 const CACHE_KEY_LATEST_RATES = 'latest_rates';
 const CACHE_TTL_HOURS = 1; // Cache rates for 1 hour
@@ -30,12 +31,35 @@ export async function getRates(): Promise<RatesResponse> {
       return cachedRates;
     }
 
-    // If not in cache or expired, fetch fresh rates
-    console.log('Fetching fresh exchange rates from API');
-    const rates = await fetchLatestRates();
+    // Check if we're online before making API call
+    if (!isOnline()) {
+      console.warn('Device is offline, waiting for connection...');
+      await waitForOnline();
+    }
+
+    // If not in cache or expired, fetch fresh rates with retry logic
+    console.log('Fetching fresh exchange rates from API with retry logic');
     
+    const result = await retryWithBackoff(
+      async () => {
+        const rates = await fetchLatestRates();
+        return rates;
+      },
+      {
+        maxAttempts: 3,
+        baseDelay: 1000,
+        maxDelay: 5000,
+        backoffFactor: 2
+      }
+    );
+
+    if (!result.success) {
+      console.error('Failed to fetch rates after retries:', result.error);
+      throw result.error;
+    }
+
     const ratesResponse: RatesResponse = {
-      rates,
+      rates: result.data!,
       timestamp: Date.now(),
       baseCurrency: 'USD' // OER free plan uses USD as base
     };
@@ -43,9 +67,18 @@ export async function getRates(): Promise<RatesResponse> {
     // Cache the rates
     setToCache(CACHE_KEY_LATEST_RATES, ratesResponse, CACHE_TTL_HOURS);
     
+    console.log(`Successfully fetched rates after ${result.attempts} attempts`);
     return ratesResponse;
   } catch (error) {
     console.error('Error getting rates:', error);
+    
+    // If we have stale cached data, return it as fallback
+    const staleCache = getFromCache<RatesResponse>(CACHE_KEY_LATEST_RATES, false); // Don't check expiry
+    if (staleCache) {
+      console.warn('Using stale cached data as fallback');
+      return staleCache;
+    }
+    
     throw error;
   }
 }

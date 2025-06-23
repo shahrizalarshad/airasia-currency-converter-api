@@ -1,9 +1,14 @@
+/**
+ * @jest-environment node
+ */
+
 import { GET } from '@/app/api/convert/route';
 import { NextRequest } from 'next/server';
 
 // Mock the currency service
 jest.mock('@/services/currencyService', () => ({
   convertCurrency: jest.fn(),
+  isValidCurrencyCode: jest.fn(() => true),
 }));
 
 // Mock the Open Exchange Rates service
@@ -59,8 +64,8 @@ describe('/api/convert', () => {
 
     // Assert
     expect(response.status).toBe(400);
-    expect(data.success).toBe(false);
-    expect(data.error).toBe('Validation error');
+    expect(data.error).toBe('Missing required parameters');
+    expect(data.message).toBeDefined();
   });
 
   it('should return 400 for invalid amount', async () => {
@@ -74,8 +79,8 @@ describe('/api/convert', () => {
 
     // Assert
     expect(response.status).toBe(400);
-    expect(data.success).toBe(false);
-    expect(data.error).toBe('Validation error');
+    expect(data.error).toBe('Invalid amount');
+    expect(data.message).toBeDefined();
   });
 
   it('should return 400 for negative amount', async () => {
@@ -89,12 +94,24 @@ describe('/api/convert', () => {
 
     // Assert
     expect(response.status).toBe(400);
-    expect(data.success).toBe(false);
-    expect(data.error).toBe('Validation error');
+    expect(data.error).toBe('Invalid amount');
+    expect(data.message).toBeDefined();
   });
 
-  it('should return 400 for same currencies', async () => {
+  it('should handle same currencies correctly', async () => {
     // Arrange
+    const mockResult = {
+      originalAmount: 100,
+      fromCurrency: 'USD',
+      toCurrency: 'USD',
+      convertedAmount: 100,
+      rateUsed: 1,
+      timestamp: Date.now(),
+      baseCurrency: 'USD',
+    };
+
+    mockConvertCurrency.mockResolvedValue(mockResult);
+
     const url = new URL('http://localhost:3000/api/convert?from=USD&to=USD&amount=100');
     const request = new NextRequest(url);
 
@@ -103,10 +120,9 @@ describe('/api/convert', () => {
     const data = await response.json();
 
     // Assert
-    expect(response.status).toBe(400);
-    expect(data.success).toBe(false);
-    expect(data.error).toBe('Validation error');
-    expect(data.message).toContain('same currency');
+    expect(response.status).toBe(200);
+    expect(data.success).toBe(true);
+    expect(data.data.convertedAmount).toBe(100);
   });
 
   it('should handle service errors gracefully', async () => {
@@ -122,13 +138,14 @@ describe('/api/convert', () => {
 
     // Assert
     expect(response.status).toBe(500);
-    expect(data.success).toBe(false);
     expect(data.error).toBe('Internal server error');
+    expect(data.message).toBeDefined();
   });
 
   it('should handle invalid currency codes', async () => {
-    // Arrange
-    mockConvertCurrency.mockRejectedValue(new Error('Currency XYZ is not supported'));
+    // Arrange - Mock isValidCurrencyCode to return false for XYZ
+    const { isValidCurrencyCode } = require('@/services/currencyService');
+    isValidCurrencyCode.mockImplementation((code: string) => code !== 'XYZ');
 
     const url = new URL('http://localhost:3000/api/convert?from=XYZ&to=EUR&amount=100');
     const request = new NextRequest(url);
@@ -138,9 +155,9 @@ describe('/api/convert', () => {
     const data = await response.json();
 
     // Assert
-    expect(response.status).toBe(500);
-    expect(data.success).toBe(false);
-    expect(data.error).toBe('Internal server error');
+    expect(response.status).toBe(400);
+    expect(data.error).toBe('Invalid from currency');
+    expect(data.message).toBeDefined();
   });
 
   it('should handle large amounts correctly', async () => {

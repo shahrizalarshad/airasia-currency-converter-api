@@ -30,6 +30,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        
+        {/* PWA Meta Tags */}
+        <meta name="theme-color" content="#26278D" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Currency Converter" />
+        <meta name="application-name" content="Currency Converter" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        
+        {/* iOS Icons */}
+        <link rel="apple-touch-icon" href="/icon.svg" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} antialiased`}
       >
