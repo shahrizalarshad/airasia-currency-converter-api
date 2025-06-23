@@ -11,8 +11,8 @@ A high-performance currency conversion API built with Next.js, TypeScript, and a
 
 ### 1. Clone and Install
 ```bash
-git clone <repository-url>
-cd currency-converter-app
+git clone https://github.com/shahrizalarshad/airasia-currency-converter-api.git
+cd airasia-currency-converter-api
 npm install
 ```
 
